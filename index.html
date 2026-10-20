@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konversi Suhu</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f4f6f8;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    width: 340px;
+  }
+  h1 { font-size: 1.15rem; margin: 0 0 1.2rem; }
+  label { display: block; margin: .7rem 0; font-size: .9rem; color: #333; }
+  input, select {
+    width: 100%;
+    padding: .55rem;
+    margin-top: .25rem;
+    border: 1px solid #ccd;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  input:focus, select:focus { outline: 2px solid #4a90d9; }
+  #out { font-size: 1.5rem; font-weight: 600; margin: 1.2rem 0 0; min-height: 1.5em; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Konversi Suhu</h1>
+    <label>Suhu
+      <input type="number" id="val" value="0">
+    </label>
+    <label>Dari
+      <select id="from">
+        <option value="c">Celcius</option>
+        <option value="f">Fahrenheit</option>
+        <option value="k">Kelvin</option>
+      </select>
+    </label>
+    <label>Ke
+      <select id="to">
+        <option value="c">Celcius</option>
+        <option value="f" selected>Fahrenheit</option>
+        <option value="k">Kelvin</option>
+      </select>
+    </label>
+    <p id="out"></p>
+  </div>
+
+<script>
+  const SYMBOL = { c: '°C', f: '°F', k: 'K' };
+  const toC = { c: v => v, f: v => (v - 32) * 5 / 9, k: v => v - 273.15 };
+  const fromC = { c: v => v, f: v => v * 9 / 5 + 32, k: v => v + 273.15 };
+
+  const val = document.getElementById('val');
+  const from = document.getElementById('from');
+  const to = document.getElementById('to');
+  const out = document.getElementById('out');
+
+  function convert() {
+    const v = parseFloat(val.value);
+    if (isNaN(v)) { out.textContent = ''; return; }
+    const result = fromC[to.value](toC[from.value](v));
+    out.textContent = Math.round(result * 100) / 100 + ' ' + SYMBOL[to.value];
+  }
+
+  val.addEventListener('input', convert);
+  from.addEventListener('change', convert);
+  to.addEventListener('change', convert);
+  convert();
+</script>
+</body>
+</html>
